@@ -415,10 +415,13 @@ class ControllerCatalogProduct extends Controller {
 
 		$profit = $result['price'] - $result['cost'];
 		$profit_formatted = $this->currency->format($profit, $this->config->get('config_currency'));
+		//for full gategory paths
+		$category_full_paths = $this->model_catalog_product->getProductCategoryFullPaths($result['product_id']);
 			$this->data['products'][] = array(
 				'product_id' => $result['product_id'],
 				'name'       => $result['name'],
 				'model'      => $result['model'],
+				'category_path' => $category_full_paths, // for full gategory paths
 				'price'      => $result['price'],
 				'cost' 		 => $result['cost'],
 				'profit'  	 => $profit_formatted,

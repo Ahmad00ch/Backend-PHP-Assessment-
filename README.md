@@ -25,5 +25,11 @@
    - Updated `admin/model/catalog/product.php` to support `filter_profit` (inequalities/ranges) and sorting via `ORDER BY (p.price - p.cost)`.
 
 
+  **Add Column: Category (Full Path)**
+   - Updated `admin/view/template/catalog/product_list.tpl` to show the `Category` column and render the product’s full category path.
+   - Updated `admin/controller/catalog/product.php` to load category full paths in getList() and pass 'category_path' with each product.
+   - Updated `admin/model/catalog/product.php` to compute full category paths via getProductCategoryFullPaths($product_id) using product_to_category, category_path.
+
+
 
 
