@@ -645,7 +645,6 @@ class ModelCatalogProduct extends Model {
 			$sql .= " AND p.price LIKE '" . $this->db->escape($data['filter_price']) . "%'";
 		}
 
-		// changed: same normalization/parsing for pagination count
 		if (isset($data['filter_cost']) && trim($data['filter_cost']) !== '') {
 			$raw = html_entity_decode(trim($data['filter_cost']), ENT_QUOTES, 'UTF-8');
 			if (preg_match('/^(<=|>=|!=|<|>)[\s]*(-?\d+(?:\.\d+)?)$/', $raw, $m)) {
