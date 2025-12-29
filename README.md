@@ -44,7 +44,17 @@
      - Passes raw filter_product_count to model, preserves it in URLs, wires sort link for product_count, exposes $button_filter.
    - `admin/view/template/catalog/category_list.tpl`
      - Adds Product Count column with sortable header (asc/desc class).
-     - Adds typed filter input in header; Filter button uses $button_filter.
+     - Adds typed filter input in header;n Filter button uses $button_filter.
+
+
+  **Add Column: Parent Category (Full Path)**
+   - `admin/model/catalog/category.php`
+       - getCategories(): adds parent_path via category_path excluding the current node, ordered by level.
+   - `admin/controller/catalog/category.php`
+       - getList(): passes parent_path in categories array; adds column_parent_path label.
+   - `admin/view/template/catalog/category_list.tpl`
+       - Renders a “Parent Category” column showing parent_path.
+
 
 
 

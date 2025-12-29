@@ -174,8 +174,8 @@ class ControllerCatalogCategory extends Controller {
 			$this->data['categories'][] = array(
 				'category_id'  => $result['category_id'],
 				'name'         => $result['name'],
+				'parent_path'  => isset($result['parent_path']) ? $result['parent_path'] : '',
 				'sort_order'   => $result['sort_order'],
-				'product_count'=> (int)$result['product_count'],
 				'selected'     => isset($this->request->post['selected']) && in_array($result['category_id'], $this->request->post['selected']),
 				'action'       => $action
 			);
@@ -188,7 +188,7 @@ class ControllerCatalogCategory extends Controller {
 		$this->data['column_name'] = $this->language->get('column_name');
 		$this->data['column_sort_order'] = $this->language->get('column_sort_order');
 		$this->data['column_action'] = $this->language->get('column_action');
-		$this->data['column_product_count'] = 'Product Count';
+		$this->data['column_parent_path'] = 'Parent Category';
 
 		$this->data['button_insert'] = $this->language->get('button_insert');
 		$this->data['button_delete'] = $this->language->get('button_delete');
