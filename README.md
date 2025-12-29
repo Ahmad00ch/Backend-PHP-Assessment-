@@ -27,6 +27,13 @@
    - Updated `admin/model/catalog/product.php` to support `filter_profit` (inequalities/ranges) and sorting via `ORDER BY (p.price - p.cost)`.
 
 
+  **Automatic Parent Category Assignment**
+
+  - `admin/model/catalog/product.php`
+    - addProduct(): for each selected category, fetch category_path by category_id and insert product_to_category for every path_id (parents included), skipping duplicates.
+    - editProduct(): delete existing product_to_category rows for the product, then re-insert for each selected category and all its parents via category_path, skipping duplicates.
+
+
   **Add Column: Category (Full Path)**
    - Updated `admin/view/template/catalog/product_list.tpl` to show the `Category` column and render the product’s full category path.
    - Updated `admin/controller/catalog/product.php` to load category full paths in getList() and pass 'category_path' with each product.
