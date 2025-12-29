@@ -94,9 +94,17 @@
               <td class="right"><?php echo $order['total']; ?></td>
               <td class="left"><?php echo $order['date_added']; ?></td>
               <td class="left"><?php echo $order['date_modified']; ?></td>
-              <td class="right"><?php foreach ($order['action'] as $action) { ?>
-                [ <a href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a> ]
-                <?php } ?></td>
+              <td class="right">
+  <?php foreach ($order['action'] as $action) { ?>
+    [ <a href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a> ]
+  <?php } ?>
+
+  [ <a href="javascript:void(0);"
+        class="view-products"
+        data-order-id="<?php echo $order['order_id']; ?>">
+        View Products
+    </a> ]
+</td>
             </tr>
             <?php } ?>
             <?php } else { ?>
@@ -111,73 +119,89 @@
     </div>
   </div>
 </div>
+<div id="order-products-modal" style="display:none;">
+  <table class="list">
+    <thead>
+      <tr>
+        <td class="left">Product ID</td>
+        <td class="left">Product Name</td>
+        <td class="right">Price</td>
+        <td class="right">Qty</td>
+        <td class="right">Total</td>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+
 <script type="text/javascript"><!--
 function filter() {
 	url = 'index.php?route=sale/order&token=<?php echo $token; ?>';
-	
+
 	var filter_order_id = $('input[name=\'filter_order_id\']').attr('value');
-	
+
 	if (filter_order_id) {
 		url += '&filter_order_id=' + encodeURIComponent(filter_order_id);
 	}
-	
+
 	var filter_customer = $('input[name=\'filter_customer\']').attr('value');
-	
+
 	if (filter_customer) {
 		url += '&filter_customer=' + encodeURIComponent(filter_customer);
 	}
-	
+
 	var filter_order_status_id = $('select[name=\'filter_order_status_id\']').attr('value');
-	
+
 	if (filter_order_status_id != '*') {
 		url += '&filter_order_status_id=' + encodeURIComponent(filter_order_status_id);
-	}	
+	}
 
 	var filter_total = $('input[name=\'filter_total\']').attr('value');
 
 	if (filter_total) {
 		url += '&filter_total=' + encodeURIComponent(filter_total);
-	}	
-	
+	}
+
 	var filter_date_added = $('input[name=\'filter_date_added\']').attr('value');
-	
+
 	if (filter_date_added) {
 		url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
 	}
-	
+
 	var filter_date_modified = $('input[name=\'filter_date_modified\']').attr('value');
-	
+
 	if (filter_date_modified) {
 		url += '&filter_date_modified=' + encodeURIComponent(filter_date_modified);
 	}
-				
+
 	location = url;
 }
-//--></script>  
+//--></script>
 <script type="text/javascript"><!--
 $(document).ready(function() {
 	$('.date').datepicker({dateFormat: 'yy-mm-dd'});
 });
-//--></script> 
+//--></script>
 <script type="text/javascript"><!--
 $('#form input').keydown(function(e) {
 	if (e.keyCode == 13) {
 		filter();
 	}
 });
-//--></script> 
+//--></script>
 <script type="text/javascript"><!--
 $.widget('custom.catcomplete', $.ui.autocomplete, {
 	_renderMenu: function(ul, items) {
 		var self = this, currentCategory = '';
-		
+
 		$.each(items, function(index, item) {
 			if (item.category != currentCategory) {
 				ul.append('<li class="ui-autocomplete-category">' + item.category + '</li>');
-				
+
 				currentCategory = item.category;
 			}
-			
+
 			self._renderItem(ul, item);
 		});
 	}
@@ -189,7 +213,7 @@ $('input[name=\'filter_customer\']').catcomplete({
 		$.ajax({
 			url: 'index.php?route=sale/customer/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
 			dataType: 'json',
-			success: function(json) {		
+			success: function(json) {
 				response($.map(json, function(item) {
 					return {
 						category: item.customer_group,
@@ -199,15 +223,51 @@ $('input[name=\'filter_customer\']').catcomplete({
 				}));
 			}
 		});
-	}, 
+	},
 	select: function(event, ui) {
 		$('input[name=\'filter_customer\']').val(ui.item.label);
-						
+
 		return false;
 	},
 	focus: function(event, ui) {
       	return false;
    	}
 });
-//--></script> 
+//--></script>
+<script type="text/javascript"><!--
+$('.view-products').on('click', function() {
+    var order_id = $(this).attr('data-order-id');
+
+    $.ajax({
+        url: 'index.php?route=sale/order/getOrderProducts&token=<?php echo $token; ?>&order_id=' + order_id,
+        dataType: 'json',
+        success: function(json) {
+            var html = '';
+
+            if (json.length) {
+                for (var i = 0; i < json.length; i++) {
+                    html += '<tr>';
+                    html += '<td class="left">' + json[i].product_id + '</td>';
+                    html += '<td class="left">' + json[i].name + '</td>';
+                    html += '<td class="right">' + json[i].price + '</td>';
+                    html += '<td class="right">' + json[i].quantity + '</td>';
+                    html += '<td class="right">' + json[i].total + '</td>';
+                    html += '</tr>';
+                }
+            } else {
+                html = '<tr><td colspan="5" class="center">No products</td></tr>';
+            }
+
+            $('#order-products-modal tbody').html(html);
+
+            $('#order-products-modal').dialog({
+                title: 'Order Products',
+                width: 700,
+                modal: true
+            });
+        }
+    });
+});
+//--></script>
+
 <?php echo $footer; ?>

@@ -2567,5 +2567,28 @@ class ControllerSaleOrder extends Controller {
 
 		$this->response->setOutput($this->render());
 	}
+
+	public function getOrderProducts() {
+    $this->load->model('sale/order');
+
+    $order_id = (int)$this->request->get['order_id'];
+
+    $products = $this->model_sale_order->getOrderProducts($order_id);
+
+    $json = array();
+
+    foreach ($products as $product) {
+        $json[] = array(
+            'product_id' => $product['product_id'],
+            'name'       => $product['name'],
+            'price'      => $this->currency->format($product['price'], $this->config->get('config_currency')),
+            'quantity'   => $product['quantity'],
+            'total'      => $this->currency->format($product['total'], $this->config->get('config_currency'))
+        );
+    }
+
+    $this->response->setOutput(json_encode($json));
+}
+
 }
 ?>

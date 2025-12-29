@@ -2,11 +2,13 @@
 
 
 
+
 ## Environment
 
 - XAMPP 1.8.1
 - PHP 5.4.x
 - OpenCart 1.5.6.4
+
 
 
 
@@ -55,6 +57,32 @@
    - `admin/view/template/catalog/category_list.tpl`
        - Renders a “Parent Category” column showing parent_path.
 
+
+
+
+### TASK 3 — ORDER PAGE MODIFICATION (ADMIN)
+
+
+  - `admin/view/template/sale/order_list.tpl`
+    Added a “View Products” action link in the Orders table (Action column).
+    Attached the order ID to the button using a data-order-id attribute.
+    Added a hidden modal HTML structure containing a table for order products.
+    Implemented jQuery click handling for the button.
+    Loaded order products dynamically via AJAX without page reload.
+    Displayed product data in the modal with the following columns:
+          Product ID
+          Product Name
+          Price
+          Quantity
+          Total
+    Used jQuery UI dialog to ensure the modal matches the default OpenCart admin UI style.
+
+  - `admin/controller/sale/order.php`
+    Added a new controller method getOrderProducts.
+    The method receives order_id via request parameters.
+    Reused OpenCart’s existing model method getOrderProducts() to fetch order products.
+    Formatted price and total values using OpenCart’s currency helper.
+    Returned product data as JSON for AJAX consumption.
 
 
 
