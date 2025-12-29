@@ -33,3 +33,19 @@
 
 
 
+### TASK 2 — CATEGORY PAGE MODIFICATIONS (ADMIN)
+
+
+  **Add Column: Product Count**
+   - `admin/model/catalog/category.php`
+     - getCategories(): COUNT(DISTINCT pc.product_id) AS product_count, typed filter parsed via HAVING, sorting by product_count.
+     - getTotalCategories($data): total respects the same typed filter.
+   - `admin/controller/catalog/category.php`
+     - Passes raw filter_product_count to model, preserves it in URLs, wires sort link for product_count, exposes $button_filter.
+   - `admin/view/template/catalog/category_list.tpl`
+     - Adds Product Count column with sortable header (asc/desc class).
+     - Adds typed filter input in header; Filter button uses $button_filter.
+
+
+
+
